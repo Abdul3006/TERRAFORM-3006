@@ -1,41 +1,40 @@
 pipeline {
+    agent any
+    
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('AKIAYOK2YLFDJXZMS66I')
+        AWS_SECRET_ACCESS_KEY = credentials('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')
+    }
 
-agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clone the repository
+                checkout scm
+            }
+        }
 
-stages {
+        stage('Terraform Init') {
+            steps {
+                // Initialize Terraform
+                sh 'terraform init'
+            }
+        }
 
-stage('Checkout') {
+        stage('Terraform Apply') {
+            steps {
+                // Run Terraform apply with AWS credentials
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', credentialsId: 'your-aws-credentials-id']]) {
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+    }
 
-steps {
-
-checkout([$class: "GitSCM", branches: [[name: "*/main"]], extensions: [], userRemoteConfigs: [[url: "https://github.com/Abdul3006/TERRAFORM-3006"]]])
-
-}
-
-}
-
-stage ("terraform init") {
-
-steps {
-
-sh ("terraform init")
-
-}
-
-}
-
-stage ("terraform Action") {
-
-steps {
-
-echo "Terraform action is –> ${action}"
-
-sh ("terraform ${action} –auto-approve")
-
-}
-
-}
-
-}
-
+    post {
+        success {
+        }
+        failure {
+        }
+    }
 }
