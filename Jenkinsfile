@@ -15,7 +15,7 @@ pipeline {
                  script{
                         dir("terraform")
                         {
-                            checkout([$class: "GitSCM", branches: [[name: "*/main"]], extensions: [], userRemoteConfigs: [[url: "https://github.com/Abdul3006/TERRAFORM-123.git"]]])
+                            checkout([$class: "GitSCM", branches: [[name: "*/main"]], extensions: [], userRemoteConfigs: [[url: "https://github.com/Abdul3006/TERRAFORM-3006.git"]]])
                         }
                     }
                 }
